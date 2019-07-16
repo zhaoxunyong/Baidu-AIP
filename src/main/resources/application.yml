@@ -1,0 +1,23 @@
+server:
+  port: 8200
+  
+
+spring:
+  application:
+    name: AIP
+
+  aip:
+    # AI server url
+    serverUrl: http://192.168.67.240:8300
+    # app id
+    appId: xwallet
+    # rest timeout, ms.
+    timeout: 30000
+
+  # 设置上传文件大小 
+  http: 
+    multipart: 
+      maxFileSize: 10Mb
+      #设置总上传的数据大小
+      #maxRequestSize: 10Gb
+    

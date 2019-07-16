@@ -1,0 +1,29 @@
+#是否启动自动生成文档的功能
+swagger:
+  enabled: true
+#  # try it out的host,不配置默认取本机ip
+#  host: localhost
+#  # try it out的port,不配置默认为80
+#  port: 8080
+  # try it out的basePath
+  basepath: /
+  #basePackage
+  basePackage: com.zerofinance.aip
+  # 文档title
+  title: Baidu AIP Documents
+  # 文档的描述
+  description: Baidu AIP Documents.
+  # 文档的termsOfServiceUrl
+  #termsOfServiceUrl: http://gitlab.xxx.com
+  # 文档的联系人
+  name: Dave.zhao
+  # 文档的联系人email
+  email: dave.zhao@zerofinance.cn
+  # 文档的联系人url
+  #url: http://gitlab.xxx.com/zhaoxunyong
+  # 文档的版本
+  version: 1.0.0-SNAPSHOT
+  #排除的url，多个用逗号分隔
+  # excludes: /api/captcha/.*
+
+  

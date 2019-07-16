@@ -1,0 +1,155 @@
+apply plugin: 'eclipse'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: "org.springframework.boot"
+apply plugin: 'io.spring.dependency-management'
+apply plugin: "nebula.optional-base"
+
+configurations.all {
+	resolutionStrategy {
+		cacheDynamicVersionsFor 0, 'seconds'
+		cacheChangingModulesFor 0, 'seconds'
+//          force 'asm:asm-all:3.3.1', 'commons-io:commons-io:1.4'
+//            force 'org.apache.zookeeper:zookeeper:3.4.8'
+	}
+	
+}
+
+eclipse {
+    classpath {
+        defaultOutputDir = file('target/bin')
+    }
+}
+
+javadoc {
+	options {
+		locale = 'zh_CN'
+		encoding = 'UTF-8'
+		docFilesSubDirs = true
+		failOnError = false
+		excludeDocFilesSubDir '.git'
+	}
+}
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+repositories { 
+	mavenLocal()
+	maven {
+		url groupUrl 
+	} 
+	jcenter()
+	mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+//[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+// https://docs.gradle.org/current/dsl/org.gradle.api.tasks.wrapper.Wrapper.html
+// https://docs.gradle.org/current/dsl/org.gradle.api.invocation.Gradle.html
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5.1'
+}
+
+dependencyManagement {
+    generatedPomCustomization {
+        enabled = false
+    }
+}
+
+ext {
+	if (version.endsWith('-SNAPSHOT')){
+		uploadUrl = "${snapshotsUrl}"
+	} else {
+		uploadUrl = "${releaseUrl}"
+	}
+
+}
+
+/* task sourceJar (type : Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+} */
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+//打包源代码
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+ 
+artifacts {
+    // archives javadocJar, sourcesJar
+    archives sourcesJar
+}
+
+// http://weibeld.net/java/publish-to-maven-central.html
+// execute: ./gradlew upload
+uploadArchives {
+    repositories {
+        mavenDeployer {
+			// repository(url: uri("$buildDir/repo"))
+			repository(url: uploadUrl) {
+				authentication(userName: username, password: password)
+			}
+
+            pom {
+                project {
+                	name project.name
+		            description "The project of Baidu-AIP"
+		            url "http://gitlab.aeasycredit.net/commons/Baidu-AIP"
+		            inceptionYear 2019
+		
+		            scm {
+		                url "http://gitlab.aeasycredit.net/commons/Baidu-AIP"
+		                connection "http://gitlab.aeasycredit.net/commons/Baidu-AIP"
+		                developerConnection "http://gitlab.aeasycredit.net/commons/Baidu-AIP"
+		            }
+		
+		            licenses {
+		                license {
+		                    name 'The Apache Software License, Version 2.0'
+		                    url 'http://www.apache.org/license/LICENSE-2.0.txt'
+		                    distribution 'repo'
+		                    comments 'A business-friendly OSS license'
+		                }
+		            }
+		
+		            organization {
+		                name 'zerofinance'
+		                url 'http://zerofinance.cn/'
+		            }
+		
+		            developers {
+		                developer {
+		                    id 'dave.zhao'
+		                    name 'dave.zhao'
+		                    email 'dave.zhao@zerofinance.cn'
+		                    url "https://github.com/zhaoxunyong"
+		                    // https://issues.gradle.org/browse/GRADLE-2719
+		                    organizationUrl "http://zerofinance.cn/"
+		                }
+		            }
+                    dependencyManagement {
+                        dependencies {
+                            dependency {
+                                groupId "com.aeasycredit"
+                                artifactId "aeasycredit-commons-dependency"
+                                version aeasycreditCommonsVersion
+                                type "pom"
+                                scope "import"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenLocal()
+		maven {
+			url groupUrl 
+		} 
+		jcenter()
+		mavenCentral()
+    }
+
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE"
+        classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.3.0"
+    }
+}
+
+ext {
+	aeasycreditCommonsVersion = "1.0.13"
+	gsonVersion = "2.7.3"
+}
+
+apply from: "gradle/common.gradle"
+
+
+dependencyManagement {
+    imports {
+        mavenBom "com.aeasycredit:aeasycredit-commons-dependency:${aeasycreditCommonsVersion}"
+    }
+}
+
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "com.aeasycredit:aeasycredit-commons-lang"
+    compile "com.aeasycredit:aeasycredit-commons-json"
+    compile "com.aeasycredit:aeasycredit-commons-codec"
+    compile "com.jayway.jsonpath:json-path"
+    compile "org.apache.httpcomponents:httpclient"
+    compile "org.immutables:gson:${gsonVersion}"
+    compile "com.aeasycredit:aeasycredit-commons-swagger"
+    compileOnly "io.swagger:swagger-annotations"
+    compileOnly "javax.servlet:javax.servlet-api"
+    compile 'org.springframework.boot:spring-boot-configuration-processor', optional
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc"
+    testCompile "org.asciidoctor:asciidoctorj"
+}

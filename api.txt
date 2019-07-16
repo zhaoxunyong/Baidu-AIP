@@ -1,0 +1,28 @@
+人脸对比:
+score	    		是	float	人脸相似度得分 80分以上可以判断为同一人，此分值对应万分之一误识率
+
+人脸认证:
+face_token			是	string	人脸标志
+user_list			是	array	匹配的用户信息列表
++score	    		是	float	用户的匹配得分 80分以上可以判断为同一人，此分值对应万分之一误识率
+
+活体检测:
+face_liveness	    是	float	所有图片的总体活体打分 范围[0~1]
+thresholds	        是	array	由服务端返回最新的阈值数据（随着模型的优化，阈值可能会变化），将此参数与返回的face_liveness进行比较，可以作为活体判断的依据。 frr_1e-4：万分之一误识率的阈值；frr_1e-3：千分之一误识率的阈值；frr_1e-2：百分之一误识率的阈值。误识率越低，准确率越高，相应的拒绝率也越高
+face_probability	是	double	人脸置信度，范围0-1
+liveness	        否	array	单张图片活体检测结果
+age	                否	double	年龄 face_field包含age时返回
+gender	            否	array	性别 face_field包含gender时返回
+glasses	            否	array	是否带眼镜 face_field包含glasses时返回
+quality	            否	array	人脸质量信息。face_field包含quality时返回
+face_type	        否	string	人脸的类型 LIVE表示生活照：通常为手机、相机拍摄的人像图片、或从网络获取的人像图片等,
+
+人脸注册
+人脸列表
+删除人脸
+获取用户信息
+用户列表
+删除用户
+创建用户组
+删除用户组
+组列表
